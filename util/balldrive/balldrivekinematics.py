@@ -14,12 +14,12 @@ class BallDriveKinematics:
     forwardKinematics: np.ndarray
 
     numModules: int
-    modules: typing.Tuple[Translation2d]
+    modules: typing.List[Translation2d]
     moduleStates: typing.List[BallDriveState]
 
     prevCoR = Translation2d()
 
-    def __init__(self, wheelPositions: typing.Tuple[Translation2d]) -> None:
+    def __init__(self, wheelPositions: typing.List[Translation2d]) -> None:
         if len(wheelPositions) < 2:
             raise SyntaxError("Ball drive requires at least two modules")
 
@@ -105,7 +105,8 @@ class BallDriveKinematics:
             chassisDeltaVector[0][0], chassisDeltaVector[1][0], chassisDeltaVector[2, 0]
         )
 
-    def desaturateWheelSpeeds(self, states: typing.List[BallDriveState],maxSpeed: float) -> typing.List[BallDriveState]:
+    @staticmethod
+    def desaturateWheelSpeeds(states: typing.List[BallDriveState],maxSpeed: float) -> typing.List[BallDriveState]:
         realMax = max([max(a.X(),a.Y()) for a in states])
         if realMax > maxSpeed:
             return [BallDriveState(a.X() / realMax * maxSpeed, a.Y() / realMax * maxSpeed) for a in states]

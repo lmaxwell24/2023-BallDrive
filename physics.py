@@ -20,9 +20,11 @@ from wpimath.system.plant import DCMotor
 import wpimath.kinematics
 from pyfrc.physics.core import PhysicsInterface
 import constants
+from util.balldrive.balldrivekinematics import BallDriveKinematics
+from util.balldrive.ballmodulestate import BallDriveState
 
 
-class SwerveModuleSim:
+class BallModuleSim:
     def __init__(
         self,
         position: Translation2d,
@@ -50,10 +52,10 @@ class SwerveModuleSim:
 
 
 class SwerveDriveSim:
-    def __init__(self, swerveModuleSims: typing.Tuple[SwerveModuleSim, ...]) -> None:
+    def __init__(self, swerveModuleSims: typing.Tuple[BallModuleSim, ...]) -> None:
         self.swerveModuleSims = swerveModuleSims
-        self.kinematics = wpimath.kinematics.SwerveDrive4Kinematics(
-            *(module.position for module in swerveModuleSims)
+        self.kinematics = BallDriveKinematics(
+            [module.position for module in swerveModuleSims]
         )
         self.pose = constants.kSimDefaultRobotLocation
         self.outputs = None
@@ -75,7 +77,7 @@ class SwerveDriveSim:
                 / module.driveMotorGearing  # scale the wheel motor to get more reasonable wheel speeds
             )
             wheelLinearVelocity = (
-                wheelAngularVelocity * constants.kWheelDistancePerRadian
+                wheelAngularVelocity * constants.kBallDistancePerRadian
             )
             module.wheelEncoderSim.setRate(wheelLinearVelocity)
 
@@ -95,9 +97,9 @@ class SwerveDriveSim:
             newSwerveAngle = module.swerveEncoderSim.getDistance() + deltaSwerveAngle
             module.swerveEncoderSim.setDistance(newSwerveAngle)
 
-            state = wpimath.kinematics.SwerveModuleState(
+            state = BallDriveState(
                 wheelLinearVelocity,
-                Rotation2d(newSwerveAngle),
+                swerveAngularVelocity
             )
             states.append(state)
 
@@ -145,47 +147,47 @@ class PhysicsEngine:
     def __init__(self, physics_controller: PhysicsInterface, robot: "MentorBot"):
         self.physics_controller = physics_controller
 
-        self.frontLeftModuleSim = SwerveModuleSim(
+        self.frontLeftModuleSim = BallModuleSim(
             constants.kFrontLeftWheelPosition,
             PWMSim(constants.kSimFrontLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
             PWMSim(constants.kSimFrontLeftSteerMotorPort),
             DCMotor.falcon500(),
-            constants.kSteerGearingRatio,
+            constants.kDriveGearingRatio,
             EncoderSim.createForChannel(constants.kSimFrontLeftDriveEncoderPorts[0]),
             EncoderSim.createForChannel(constants.kSimFrontLeftSteerEncoderPorts[0]),
         )
-        self.frontRightModuleSim = SwerveModuleSim(
+        self.frontRightModuleSim = BallModuleSim(
             constants.kFrontRightWheelPosition,
             PWMSim(constants.kSimFrontRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
             PWMSim(constants.kSimFrontRightSteerMotorPort),
             DCMotor.falcon500(),
-            constants.kSteerGearingRatio,
+            constants.kDriveGearingRatio,
             EncoderSim.createForChannel(constants.kSimFrontRightDriveEncoderPorts[0]),
             EncoderSim.createForChannel(constants.kSimFrontRightSteerEncoderPorts[0]),
         )
-        self.backSimLeftModule = SwerveModuleSim(
+        self.backSimLeftModule = BallModuleSim(
             constants.kBackLeftWheelPosition,
             PWMSim(constants.kSimBackLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
             PWMSim(constants.kSimBackLeftSteerMotorPort),
             DCMotor.falcon500(),
-            constants.kSteerGearingRatio,
+            constants.kDriveGearingRatio,
             EncoderSim.createForChannel(constants.kSimBackLeftDriveEncoderPorts[0]),
             EncoderSim.createForChannel(constants.kSimBackLeftSteerEncoderPorts[0]),
         )
-        self.backSimRightModule = SwerveModuleSim(
+        self.backSimRightModule = BallModuleSim(
             constants.kBackRightWheelPosition,
             PWMSim(constants.kSimBackRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
             PWMSim(constants.kSimBackRightSteerMotorPort),
             DCMotor.falcon500(),
-            constants.kSteerGearingRatio,
+            constants.kDriveGearingRatio,
             EncoderSim.createForChannel(constants.kSimBackRightDriveEncoderPorts[0]),
             EncoderSim.createForChannel(constants.kSimBackRightSteerEncoderPorts[0]),
         )

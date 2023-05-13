@@ -20,6 +20,9 @@ class BallDriveState:
     def Y(self) -> float:
         return self.translation.Y()
 
+    def Translation(self) -> Translation2d:
+        return self.translation
+
     def __eq__(self, __value: object) -> bool:
         if type(__value) == BallDriveState:
             return (

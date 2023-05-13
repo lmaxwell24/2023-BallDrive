@@ -129,60 +129,54 @@ kBackRightWheelPosition = Translation2d(
 )
 """[meters, meters]"""
 
-kWheelDiameter = 4 * kMetersPerInch
+kBallDiameter = 7 * kMetersPerInch
 """meters"""
 
-kWheelRadius = kWheelDiameter / 2
+kBallRadius = kBallDiameter / 2
 """meters"""
 
-kWheelCircumference = kWheelRadius * 2 * math.pi
+kBallCircumference = kBallRadius * 2 * math.pi
 """meters"""
 
-kWheelDistancePerRevolution = kWheelCircumference
+kBallDistancePerRevolution = kBallCircumference
 """meters / revolution"""
 
-kWheelDistancePerRadian = kWheelDistancePerRevolution / kRadiansPerRevolution
+kBallDistancePerRadian = kBallDistancePerRevolution / kRadiansPerRevolution
 """meters / radian"""
 
-kDriveGearingRatio = (50 / 14) * (17 / 27) * (45 / 15)
-"""dimensionless"""
-
-kSteerGearingRatio = 150 / 7
+kDriveGearingRatio = (7/2) * (36 / 11)
 """dimensionless"""
 
 kMaxMotorAngularVelocity = DCMotor.falcon500().freeSpeed
 """radians / second"""
 
-kMaxWheelAngularVelocity = kMaxMotorAngularVelocity / kDriveGearingRatio
+kMaxBallAngularVelocity = kMaxMotorAngularVelocity / kDriveGearingRatio
 """radians / second"""
 
-kMaxWheelLinearVelocity = kWheelDistancePerRadian * kMaxWheelAngularVelocity
+kMaxBallLinearVelocity = kBallDistancePerRadian * kMaxBallAngularVelocity
 """meters / second"""
 
-kMinWheelLinearVelocity = 0.002
+kMinBallLinearVelocity = 0.002
 """meters / second"""
 
-kMaxSteerAngularVelocity = kMaxMotorAngularVelocity / kSteerGearingRatio
-"""radians / second"""
-
-kMaxForwardLinearVelocity = kMaxWheelLinearVelocity
+kMaxForwardLinearVelocity = kMaxBallLinearVelocity
 """meters / second"""
 
-kMaxSidewaysLinearVelocity = kMaxWheelLinearVelocity
+kMaxSidewaysLinearVelocity = kMaxBallLinearVelocity
 """meters / second"""
 
 kMaxRotationAngularVelocity = (
-    kMaxWheelLinearVelocity / kSwerveModuleDistanceFromRobotCenter
+    kMaxBallLinearVelocity / kSwerveModuleDistanceFromRobotCenter
 )
 """radians / second (omega = v / r)"""
 
-kMaxWheelLinearAcceleration = kMaxWheelLinearVelocity / 1
+kMaxBallLinearAcceleration = kMaxBallLinearVelocity / 1
 """meters / second^2"""
 
-kMaxForwardLinearAcceleration = kMaxWheelLinearAcceleration
+kMaxForwardLinearAcceleration = kMaxBallLinearAcceleration
 """meters / second^2"""
 
-kMaxSidewaysLinearAcceleration = kMaxWheelLinearAcceleration
+kMaxSidewaysLinearAcceleration = kMaxBallLinearAcceleration
 """meters / second^2"""
 
 kMaxRotationAngularAcceleration = kMaxRotationAngularVelocity / 0.5
@@ -256,33 +250,17 @@ kDriveEncoderPulsesPerRevolution = kTalonEncoderPulsesPerRevolution
 kDriveEncoderPulsesPerRadian = kDriveEncoderPulsesPerRevolution / kRadiansPerRevolution
 """pulses / radian"""
 
-kDriveEncoderPulsesPerMeter = kDriveEncoderPulsesPerRadian / kWheelDistancePerRadian
+kDriveEncoderPulsesPerMeter = kDriveEncoderPulsesPerRadian / kBallDistancePerRadian
 """pulses / meter"""
 
-kWheelEncoderPulsesPerRevolution = kDriveEncoderPulsesPerRevolution * kDriveGearingRatio
+kBallEncoderPulsesPerRevolution = kDriveEncoderPulsesPerRevolution * kDriveGearingRatio
 """pulses / revolution"""
 
-kWheelEncoderPulsesPerRadian = kWheelEncoderPulsesPerRevolution / kRadiansPerRevolution
+kBallEncoderPulsesPerRadian = kBallEncoderPulsesPerRevolution / kRadiansPerRevolution
 """pulses / radian"""
 
-kWheelEncoderPulsesPerMeter = kWheelEncoderPulsesPerRadian / kWheelDistancePerRadian
+kBallEncoderPulsesPerMeter = kBallEncoderPulsesPerRadian / kBallDistancePerRadian
 """pulses / meter"""
-
-kSteerEncoderPulsesPerRevolution = kTalonEncoderPulsesPerRevolution
-"""pulses / revolution"""
-
-kSteerEncoderPulsesPerRadian = kSteerEncoderPulsesPerRevolution / kRadiansPerRevolution
-"""pulses / radian"""
-
-kSwerveEncoderPulsesPerRevolution = (
-    kSteerEncoderPulsesPerRevolution * kSteerGearingRatio
-)
-"""pulses / revolution"""
-
-kSwerveEncoderPulsesPerRadian = (
-    kSwerveEncoderPulsesPerRevolution / kRadiansPerRevolution
-)
-"""pulses / radian"""
 
 # CTRE
 k100MillisecondsPerSecond = 10 / 1  # there are 10 groups of 100 milliseconds per second
@@ -302,51 +280,25 @@ kTalonVelocityPerAngularVelocity = kTalonVelocityPerRPM * kRPMPerAngularVelocity
 kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
-kDrivePIDSlot = 0
-kDrivePGain = 0.15
-kDriveIGain = 0.0
-kDriveDGain = 2.0
+kXDrivePIDSlot = 0
+kXDrivePGain = 0.15
+kXDriveIGain = 0.0
+kXDriveDGain = 2.0
 
-kSteerPIDSlot = 0
-kSteerPGain = 0.6
-kSteerIGain = 0.0
-kSteerDGain = 12.0
+kYDrivePIDSlot = 0
+kYDrivePGain = 0.6
+kYDriveIGain = 0.0
+kYDriveDGain = 12.0
 
-kFrontLeftDriveInverted = False
-kFrontRightDriveInverted = False
-kBackLeftDriveInverted = False
-kBackRightDriveInverted = False
+kFrontLeftXDriveInverted = False
+kFrontRightXDriveInverted = False
+kBackLeftXDriveInverted = False
+kBackRightXDriveInverted = False
 
-kFrontLeftSteerInverted = True
-kFrontRightSteerInverted = True
-kBackLeftSteerInverted = True
-kBackRightSteerInverted = True
-
-"""
-To determine encoder offsets (with robot ON and DISABLED):
-  1. Rotate all swerve modules so that the wheels:
-     * are running in the forwards-backwards direction
-     * have the wheel bevel gears facing inwards towards the
-       center-line of the robot
-  2. Run Phoenix Tuner
-  3. Select desired encoder
-  4. Go to "Config" tab
-  5. Click "Factory Default"
-  6. Go to "Self-Test Snapshot" tab
-  7. Click "Self-Test Snapshot"
-  8. Record value from line: "Absolute Position (unsigned):"
-"""
-kFrontLeftAbsoluteEncoderOffset = 256.113
-"""degrees"""
-
-kFrontRightAbsoluteEncoderOffset = 125.420
-"""degrees"""
-
-kBackLeftAbsoluteEncoderOffset = 341.719
-"""degrees"""
-
-kBackRightAbsoluteEncoderOffset = 331.260
-"""degrees"""
+kFrontLeftYDriveInverted = True
+kFrontRightYDriveInverted = True
+kBackLeftYDriveInverted = True
+kBackRightYDriveInverted = True
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
